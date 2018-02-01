@@ -1,0 +1,9 @@
+# Dependencies
+vendor
+
+# Local files
+settings.php
+key*.pem
+
+# Runtime files
+_cache

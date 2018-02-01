@@ -1,0 +1,32 @@
+{
+    "name": "portier/ldap-idp",
+    "description": "Portier LDAP identity provider in PHP",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Stéphan Kochen",
+            "email": "stephan@kochen.nl"
+        }
+    ],
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "PortierLdap\\": "src/"
+        }
+    },
+    "require": {
+        "lcobucci/jwt": "^3.2",
+        "respect/validation": "^1.1",
+        "slim/http-cache": "^0.4.0",
+        "slim/slim": "^3.9",
+        "slim/twig-view": "^2.3",
+        "spomky-labs/base64url": "^1.0"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^0.9",
+        "squizlabs/php_codesniffer": "^3.1"
+    }
+}

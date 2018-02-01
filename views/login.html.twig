@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Login to {{ domain }}</title>
+    <link rel="stylesheet" href="/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <main>
+        <h1>Login to {{ domain }}</h1>
+        <form method="post" action="/login">
+          <p>Enter the password for <strong>{{ username }}</strong>:</p>
+          <div class="entry">
+            <input id="password" type="password" name="password" autofocus></label><button type="submit">Login</button></p>
+          </div>
+          <input type="hidden" name="redirect_uri" value="{{ redirectUri }}">
+          <input type="hidden" name="state" value="{{ state }}">
+          <input type="hidden" name="nonce" value="{{ nonce }}">
+          <input type="hidden" name="username" value="{{ username }}">
+        </form>
+        {% if error %}<p class="error">Invalid credentials</p>{% endif %}
+      </main>
+    </div>
+  </body>
+</html>
