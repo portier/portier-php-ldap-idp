@@ -7,14 +7,14 @@ A [Portier] identity provider that authenticates against an LDAP server.
 ### Installation
 
 To run this app, you need at least PHP 7.0 with the `gmp` extension. [Composer]
-is used to manager dependencies.
+is used to manage dependencies.
 
 This app must be deployed on a webserver that is accessible by your users over
-HTTPS, and also able to connect your LDAP server.
+HTTPS, and also able to connect to your LDAP server.
 
 It currently must have its own HTTPS domain, and cannot be hosted in a
-subdirectory. It doesn't have to run on the exact domain for which you're trying
-to authenticate email addresses, though.
+subdirectory. The domain doesn't have to be the exact domain for which you're
+trying to authenticate email addresses, though.
 
  - [Download a ZIP] of the app or clone the [git repository].
 
