@@ -57,7 +57,7 @@ $EDITOR settings.php
 ```
 
  [Composer]: https://getcomposer.org/
- [Download a ZIP]: https://github.com/portier/portier-php-ldap-idp/archive/develop.zip
+ [Download a ZIP]: https://github.com/portier/portier-php-ldap-idp/archive/master.zip
  [git repository]: https://github.com/portier/portier-php-ldap-idp
  [Slim webserver documentation]: https://www.slimframework.com/docs/start/web-servers.html
 
