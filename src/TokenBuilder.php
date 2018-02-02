@@ -56,7 +56,7 @@ final class TokenBuilder
     /**
      * Create a redirect response with the token attached.
      */
-    public function getRedirect(Res $res, string $email, string $redirectUri, string $nonce, ?string $state): Res
+    public function getRedirect(Res $res, string $email, string $redirectUri, string $nonce, string $state = null): Res
     {
         // Create the redirect parameters, including the token.
         $params = [
