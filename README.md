@@ -40,10 +40,9 @@ $EDITOR settings.php
  - See the [Slim webserver documentation] on configuring your webserver.
    (Similar to most other PHP apps, with `public/` as the document root.)
 
- - If the app domain is not hosted on the exact email domain, configure
-   Webfinger on the HTTPS email domain. The simplest way to do this is to serve
-   a static file at `https://mydomain.example/.well-known/webfinger` containing,
-   for example:
+ - If the app is not hosted on the exact email domain, configure Webfinger on
+   the HTTPS email domain. The simplest way to do this is to serve a static file
+   at `https://mydomain.example/.well-known/webfinger` containing, for example:
 
 ```json
 {
@@ -64,8 +63,8 @@ $EDITOR settings.php
 ### Hardening
 
 Rate limit requests in your webserver (specifically POST requests) to prevent
-brute forcing of passwords. (Though your LDAP server may also be rate limiting
-login attempts already.)
+brute forcing of passwords. (Your LDAP server may also be rate limiting login
+attempts already, though you should not rely on this.)
 
 Rotate keys regularly. Due to caching, you should not do this more than once a
 day. You may use the included `rotate-keys.sh` script, see the comments in it
