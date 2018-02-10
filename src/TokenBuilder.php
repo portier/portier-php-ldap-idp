@@ -44,8 +44,9 @@ final class TokenBuilder
             ->set('iss', $this->origin)
             ->set('aud', $audience)
             ->set('exp', time() + 60)
-            ->set('nonce', $nonce)
+            ->set('iat', time())
             ->set('email', $email)
+            ->set('nonce', $nonce)
             ->setHeader('kid', $this->kid)
             ->sign($this->signer, $this->key)
             ->getToken();
