@@ -19,6 +19,7 @@
     },
     "require": {
         "php": "^7.0",
+        "jakeasmith/http_build_url": "^1.0",
         "lcobucci/jwt": "^3.2",
         "respect/validation": "^1.1",
         "slim/http-cache": "^0.4.0",
