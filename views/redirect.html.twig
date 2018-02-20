@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Forwarding...</title>
+  </head>
+  <body>
+    <form id="form" action="{{ redirectUri }}" method="post">
+      <input type="hidden" name="id_token" value="{{ token }}">
+      {% if state %}
+        <input type="hidden" name="state" value="{{ state }}">
+      {% endif %}
+    </form>
+    <script>document.getElementById('form').submit();</script>
+  </body>
+</html>

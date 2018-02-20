@@ -15,6 +15,7 @@
             <input id="password" type="password" name="password" autofocus></label><button type="submit">Login</button></p>
           </div>
           <input type="hidden" name="redirect_uri" value="{{ redirectUri }}">
+          <input type="hidden" name="response_mode" value="{{ responseMode }}">
           <input type="hidden" name="state" value="{{ state }}">
           <input type="hidden" name="nonce" value="{{ nonce }}">
           <input type="hidden" name="username" value="{{ username }}">

@@ -54,6 +54,11 @@ final class App
 
                 return new TokenBuilder($settings['origin'], $key, $kid);
             },
+
+            // Add our oauth responder service.
+            'oauthResponder' => function ($container) {
+                return new OauthResponder($container->view);
+            },
         ]);
 
         // Default cache for one day.
@@ -91,6 +96,7 @@ final class App
             return $res->withJson([
                 'issuer' => $origin,
                 'authorization_endpoint' => $origin . '/login',
+                'response_modes_supported' => ['form_post', 'fragment'],
                 'jwks_uri' => $origin . '/keys.json',
             ]);
         });
@@ -116,9 +122,13 @@ final class App
             // Validate input.
             $validation = v::arrayType()
                 ->key('response_type', v::equals('id_token'))
+                ->key('response_mode', v::oneOf(
+                    v::equals('form_post'),
+                    v::equals('fragment')
+                ), false)
                 ->key('scope', v::equals('openid email'))
                 ->key('redirect_uri', v::stringType()->url())
-                ->key('state', v::stringType())
+                ->key('state', v::stringType(), false)
                 ->key('nonce', v::stringType()->notEmpty())
                 ->key('login_hint', v::stringType()->email());
 
@@ -139,6 +149,7 @@ final class App
                 'username' => $username,
                 'domain' => $domain,
                 'redirectUri' => $input['redirect_uri'],
+                'responseMode' => isset($input['response_mode']) ? $input['response_mode'] : 'fragment',
                 'state' => isset($input['state']) ? $input['state'] : '',
                 'nonce' => $input['nonce'],
                 'error' => false,
@@ -156,7 +167,11 @@ final class App
             // Validate input.
             $validation = v::arrayType()
                 ->key('redirect_uri', v::stringType()->url())
-                ->key('state', v::stringType(), false)
+                ->key('response_mode', v::oneOf(
+                    v::equals('form_post'),
+                    v::equals('fragment')
+                ))
+                ->key('state', v::stringType())
                 ->key('nonce', v::stringType()->notEmpty())
                 ->key('username', v::stringType()->notEmpty())
                 ->key('password', v::stringType());
@@ -195,26 +210,34 @@ final class App
                 $valid = @ldap_bind($conn, $dn, $password);
             }
 
-            if ($valid) {
-                // Create a redirect response with a token.
-                return $this->tokenBuilder->getRedirect(
-                    $res,
-                    $username . '@' . $this->settings['domain'],
-                    $input['redirect_uri'],
-                    $input['nonce'],
-                    $input['state']
-                );
-            } else {
-                // If invalid, render the login page again.
+            // If invalid, render the login page again.
+            if (!$valid) {
                 return $this->view->render($res->withStatus(403), 'login.html.twig', [
                     'username' => $username,
                     'domain' => $this->settings['domain'],
                     'redirectUri' => $input['redirect_uri'],
-                    'state' => isset($input['state']) ? $input['state'] : '',
+                    'responseMode' => $input['response_mode'],
+                    'state' => $input['state'],
                     'nonce' => $input['nonce'],
                     'error' => true,
                 ]);
             }
+
+            // Create a signed token.
+            $token = $this->tokenBuilder->getToken(
+                $username . '@' . $this->settings['domain'],
+                $input['redirect_uri'],
+                $input['nonce']
+            );
+
+            // Return the token to the client.
+            return $this->oauthResponder->createResponse(
+                $res,
+                $input['response_mode'],
+                $input['redirect_uri'],
+                $token,
+                $input['state']
+            );
         });
     }
 }

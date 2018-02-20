@@ -53,25 +53,4 @@ final class TokenBuilder
 
         return (string) $token;
     }
-
-    /**
-     * Create a redirect response with the token attached.
-     */
-    public function getRedirect(Res $res, string $email, string $redirectUri, string $nonce, string $state = null): Res
-    {
-        // Create the redirect parameters, including the token.
-        $params = [
-            'id_token' => $this->getToken($email, $redirectUri, $nonce),
-        ];
-        if ($state !== null) {
-            $params['state'] = $state;
-        }
-
-        // Build the redirect URL containing the token.
-        // @todo Should we combine hash parameters?
-        $url = $redirectUri . '#' . http_build_query($params);
-
-        // Return a '303 See Other' redirect response.
-        return $res->withStatus(303)->withHeader('Location', $url);
-    }
 }
