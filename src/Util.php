@@ -20,7 +20,14 @@ final class Util
     public static function pemToJwk(string $kid, string $pem): array
     {
         $pubkey = openssl_get_privatekey($pem);
+        if ($pubkey === false) {
+            throw new \Exception(sprintf('Failed to parse key "%s"', $kid));
+        }
+
         $parts = openssl_pkey_get_details($pubkey);
+        if ($parts === false) {
+            throw new \Exception(sprintf('Failed to inspect key "%s"', $kid));
+        }
 
         return [
             'kid' => $kid,
@@ -38,6 +45,10 @@ final class Util
     public static function getUrlOrigin(string $url): string
     {
         $parts = parse_url($url);
+        if ($parts === false || empty($parts['scheme']) || empty($parts['host'])) {
+            throw new \Exception('Invalid URI');
+        }
+
         $scheme = $parts['scheme'];
         $host = $parts['host'];
 

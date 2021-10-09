@@ -1,10 +1,10 @@
 # Dependencies
-composer.lock
-vendor
+/composer.lock
+/vendor
 
 # Local files
-settings.php
-key*.pem
+/settings.php
+/key*.pem
 
 # Runtime files
-_cache
+/_cache

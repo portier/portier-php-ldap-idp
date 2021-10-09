@@ -9,12 +9,9 @@ use Psr\Http\Message\ResponseInterface as Res;
  */
 final class OauthResponder
 {
-    /** @var TwigService **/
-    private $view;
-
-    public function __construct(TwigService $view)
-    {
-        $this->view = $view;
+    public function __construct(
+        private TwigService $twig
+    ) {
     }
 
     /**
@@ -25,7 +22,7 @@ final class OauthResponder
         string $responseMode,
         string $redirectUri,
         string $token,
-        string $state
+        string $state,
     ): Res {
         switch ($responseMode) {
             case 'form_post':
@@ -47,10 +44,10 @@ final class OauthResponder
         Res $res,
         string $redirectUri,
         string $token,
-        string $state
+        string $state,
     ): Res {
         // Render a form which does the POST request for us.
-        return $this->view->render($res, 'redirect.html.twig', compact('redirectUri', 'token', 'state'));
+        return $this->twig->render($res, 'redirect.html.twig', compact('redirectUri', 'token', 'state'));
     }
 
     /**
@@ -60,7 +57,7 @@ final class OauthResponder
         Res $res,
         string $redirectUri,
         string $token,
-        string $state
+        string $state,
     ): Res {
         // Build the fragment parameters.
         $params = ['id_token' => $token];
@@ -71,6 +68,10 @@ final class OauthResponder
 
         // Append to the URL, which may contain existing parameters.
         $parts = parse_url($redirectUri);
+        if ($parts === false) {
+            throw new \Exception('Invalid redirect URI');
+        }
+
         if (empty($parts['fragment'])) {
             $parts['fragment'] = $fragment;
         } else {

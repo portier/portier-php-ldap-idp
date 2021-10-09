@@ -2,31 +2,18 @@
 namespace PortierLdap;
 
 use Lcobucci\JWT;
-use Psr\Http\Message\ResponseInterface as Res;
+use Lcobucci\JWT\Signer\Key\InMemory;
 
 /**
  * Service that builds IdP tokens.
  */
 final class TokenBuilder
 {
-    /** @var string **/
-    private $origin;
-    /** @var JWT\Signer\Key **/
-    private $key;
-    /** @var string **/
-    private $kid;
-    /** @var JWT\Signer **/
-    private $signer;
-
     public function __construct(
-        string $origin,
-        string $key,
-        string $kid
+        private string $origin,
+        private string $key,
+        private string $kid,
     ) {
-        $this->origin = $origin;
-        $this->key = new JWT\Signer\Key($key);
-        $this->kid = $kid;
-        $this->signer = new JWT\Signer\Rsa\Sha256;
     }
 
     /**
@@ -38,19 +25,25 @@ final class TokenBuilder
         // This is the token audience in Portier.
         $audience = Util::getUrlOrigin($redirectUri);
 
-        // Build a token.
-        $builder = new JWT\Builder;
-        $token = $builder
-            ->set('iss', $this->origin)
-            ->set('aud', $audience)
-            ->set('exp', time() + 60)
-            ->set('iat', time())
-            ->set('email', $email)
-            ->set('nonce', $nonce)
-            ->setHeader('kid', $this->kid)
-            ->sign($this->signer, $this->key)
-            ->getToken();
+        // Prepare timestamps.
+        $issuedAt = new \DateTimeImmutable();
+        $expiresAt = $issuedAt->add(new \DateInterval('PT60S'));
 
-        return (string) $token;
+        // Build a token.
+        $signer = new JWT\Signer\Rsa\Sha256;
+        $key = InMemory::plainText($this->key);
+        $config = JWT\Configuration::forAsymmetricSigner($signer, $key, $key);
+
+        $token = $config->builder()
+            ->issuedBy($this->origin)
+            ->permittedFor($audience)
+            ->issuedAt($issuedAt)
+            ->expiresAt($expiresAt)
+            ->withClaim('email', $email)
+            ->withClaim('nonce', $nonce)
+            ->withHeader('kid', $this->kid)
+            ->getToken($config->signer(), $config->signingKey());
+
+        return $token->toString();
     }
 }

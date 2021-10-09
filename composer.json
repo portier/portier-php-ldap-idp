@@ -1,34 +1,36 @@
 {
-    "name": "portier/ldap-idp",
-    "description": "Portier LDAP identity provider in PHP",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Stéphan Kochen",
-            "email": "stephan@kochen.nl"
-        }
-    ],
-    "config": {
-        "optimize-autoloader": true,
-        "sort-packages": true
-    },
-    "autoload": {
-        "psr-4": {
-            "PortierLdap\\": "src/"
-        }
-    },
-    "require": {
-        "php": "^7.0",
-        "jakeasmith/http_build_url": "^1.0",
-        "lcobucci/jwt": "^3.2",
-        "respect/validation": "^1.1",
-        "slim/http-cache": "^0.4.0",
-        "slim/slim": "^3.9",
-        "slim/twig-view": "^2.3",
-        "spomky-labs/base64url": "^1.0"
-    },
-    "require-dev": {
-        "phpstan/phpstan": "^0.9",
-        "squizlabs/php_codesniffer": "^3.1"
+  "name": "portier/ldap-idp",
+  "description": "Portier LDAP identity provider in PHP",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Stéphan Kochen",
+      "email": "stephan@kochen.nl"
     }
+  ],
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  },
+  "autoload": {
+    "psr-4": {
+      "PortierLdap\\": "src/"
+    }
+  },
+  "require": {
+    "php": "^8.0.0",
+    "jakeasmith/http_build_url": "^1.0.1",
+    "lcobucci/jwt": "^4.1.5",
+    "psr/container": "^2.0",
+    "respect/validation": "^2.2.3",
+    "slim/http-cache": "^1.1.0",
+    "slim/psr7": "^1.5",
+    "slim/slim": "^4.9.0",
+    "slim/twig-view": "^3.2.0",
+    "spomky-labs/base64url": "^2.0.4"
+  },
+  "require-dev": {
+    "phpstan/phpstan": "^0.12.99",
+    "squizlabs/php_codesniffer": "^3.6.0"
+  }
 }

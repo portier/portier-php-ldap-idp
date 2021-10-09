@@ -1,4 +1,0 @@
-parameters:
-  ignoreErrors:
-    - '#^Access to an undefined property PortierLdap\\App::\$.+\.$#'
-    - '#^Using \$this in static method PortierLdap\\App::.+\(\)\.$#'

@@ -1,32 +1,18 @@
 <?php
-return [
-    // Email domain handled by the app.
-    // For internationalized domain names (IDN), specify the punycode encoding here.
-    'domain' => 'mydomain.example',
 
-    // Origin of the app. This is the public URL without a trailing slash.
-    // The app cannot be hosted in a subdirectory.
-    // Again, for IDN, use the punycode encoding here.
-    'origin' => 'https://auth.mydomain.example',
+// See `src/Settings.php` for documentation on all available settings.
+$settings = new \PortierLdap\Settings;
 
-    // PEM-format signing keys we use. Only the first will be used for signing.
-    // Setting multiple keys is useful when rotating keys, the others are still listed in `/keys.json`.
-    'keys' => [
-        'main' => file_get_contents(__DIR__ . '/key.pem'),
-    ],
+$settings->domain = 'mydomain.example';
+$settings->origin = 'https://auth.mydomain.example';
 
-    // LDAP servers to authenticate against.
-    'ldapServers' => [
-        'ldap://dc.mydomain.example',
-    ],
+$settings->ldapServers = ['ldap://dc.mydomain.example'];
+$settings->dnTemplate = 'uid={USERNAME},cn=users,dc=mydomain,dc=example';
 
-    // The template for the distinguished name to try and bind to.
-    // In this template, `{USERNAME}` is replaced with the escaped username.
-    'dnTemplate' => 'uid={USERNAME},cn=users,dc=mydomain,dc=example',
+$mainKey = file_get_contents(__DIR__ . '/key.pem');
+if ($mainKey === false) {
+    throw new \Exception('Could not read key.pem');
+}
+$settings->keys = [$mainKey];
 
-    // Optional cache directory. The default is `_cache` in the app root directory.
-    // 'cacheDir' => '/path/to/cache/directory',
-
-    // Uncomment in development to display errors in the response.
-    // 'displayErrorDetails' => true,
-];
+return $settings;
